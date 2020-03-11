@@ -67,7 +67,7 @@ void RobotArm::moveToPosition(double x, double y, double z) {
 }
 
 void RobotArm::moveToPosition(double x, double y, double z, double a) {
-  moveL(x + xOffset, y + yOffset, z + zOffset, a, 15);
+  moveL(x + xOffset, y + yOffset, z + zOffset, a, 5);
 }
 
 /**
@@ -140,19 +140,22 @@ void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1) 
 }
 
 void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1, RobotArmFKinematicOutput &output) {
-  double a2 = 90.0-b1;
-  double b2 = 90.0-a1;
-  double c2 = 90.0-c1;
-  double x1 = (dimensions[0] * sin(dtr(a1)))/sin(dtr(90));
-  double x2 = (dimensions[1] * sin(dtr(b1)))/sin(dtr(90));
-  double x3 = (dimensions[2] * sin(dtr(c2)))/sin(dtr(90));
-  double z1 = (dimensions[0] * sin(dtr(b2)))/sin(dtr(90));
-  double z2 = (dimensions[1] * sin(dtr(a2)))/sin(dtr(90));
-  double z3 = (dimensions[2] * sin(dtr(c1)))/sin(dtr(90));
-  double r = (x1-x2+x3)+R_OFFSET;
+  double d1 = 90.0-(90.0-c1);
+
+  double x1 = dimensions[0] * cos(dtr(90-a1));
+  double x2 = dimensions[1] * sin(dtr(-b1));
+  double x3 = dimensions[2] * sin(dtr(c1));
+  double x4 = Z_OFFSET * sin(dtr(d1));
+
+  double z1 = dimensions[0] * sin(dtr(a1));
+  double z2 = dimensions[1] * cos(dtr(b1));
+  double z3 = dimensions[2] * sin(dtr(c1));
+  double z4 = Z_OFFSET * cos(dtr(d1));
+
+  double r = (x1+x2);//-(x3+x4)+R_OFFSET;
   output.x = r*cos(dtr(t));
   output.y = r*sin(dtr(t));
-  output.z = z1-z2-z3;
+  output.z = (z1-z2)+(z3-z4);
   output.a = c1;
 }
 
@@ -167,9 +170,19 @@ void RobotArm::inverseKinematicSolve(double x,double y,double z, double a) {
 
 void RobotArm::inverseKinematicSolve(double x,double y,double z, double a, RobotArmIKinematicOutput &output) {
   double r = sqrt(pow(x,2)+pow(y,2))-R_OFFSET;
-  double nr = r - (dimensions[2]*cos(dtr(a)));
-  double nz = z + (dimensions[2]*sin(dtr(a)));
+
+  double tnZOF = (dimensions[2]*sin(dtr(a)));
+  double nZOF = Z_OFFSET - tnZOF;
+  double nH = sqrt(pow(dimensions[2],2) + pow(Z_OFFSET,2));
+  double n4 = 90 - (asin((nZOF*sin(dtr(180-(90-a))))/(nH)));
+
+  double tr = nH * sin(dtr(n4));
+  double tz = nH * cos(dtr(n4));
+
+  double nr = r - tr;
+  double nz = z - tz;
   double rot = atan(y/x);
+
   output.j4 = a;
   output.j3=acos((pow(nr,2)+pow(nz,2)-pow(dimensions[0],2)-pow(dimensions[1],2))/(2*(dimensions[0])*(dimensions[1])));
   output.j2=90-(rtd(atan(nz/nr)+atan((dimensions[1]*sin(output.j3))/(dimensions[0]+dimensions[1]*(cos(output.j3))))));
@@ -212,8 +225,8 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
   float maxVelocity = maxVelocityInput;
 
 // accel duration
-  float t1 = 800;
-  float t2 = 800;
+  float t1 = 500;
+  float t2 = 500;
   float itp = 3;
 
   float t4 = fabs((targetPosition - startPosition)/maxVelocity) * 1000;

@@ -105,14 +105,14 @@ int robot_loop(){
   while(true){
     
     Brain.Screen.clearScreen();
-    //arm.eStop();
-    //arm.dataTester();
-    //vex::task::sleep(100);
+    arm.eStop();
+    arm.dataTester();
+    vex::task::sleep(50);
 
     //arm.moveToPosition(5.63,5.01,0,0);
 
-    arm.moveToPosition(5,-4,-1.1,0);
-    arm.moveToPosition(10,3,-1.25,0);
+    // arm.moveToPosition(6,-2,-1.1,0);
+    // arm.moveToPosition(6,2,-1.1,0);
 
     //arm.moveToPosition(5.63,-5.01,0,0);
 
