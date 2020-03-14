@@ -140,22 +140,33 @@ void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1) 
 }
 
 void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1, RobotArmFKinematicOutput &output) {
-  double d1 = 90.0-(90.0-c1);
+  
+  double ch = sqrt(pow(dimensions[2],2)+pow(Z_OFFSET,2));
+  double cd = rtd(acos(dtr((pow(ch,2)+pow(dimensions[2],2)+pow(Z_OFFSET,2)))/(2*ch*Z_OFFSET)));
+  double c2 = 180-cd-(90-c1);
+  double tr = ch * sin(dtr(c2));
+  double tz = ch * cos(dtr(c2));
 
   double x1 = dimensions[0] * cos(dtr(90-a1));
   double x2 = dimensions[1] * sin(dtr(-b1));
-  double x3 = dimensions[2] * sin(dtr(c1));
-  double x4 = Z_OFFSET * sin(dtr(d1));
-
+  
   double z1 = dimensions[0] * sin(dtr(a1));
   double z2 = dimensions[1] * cos(dtr(b1));
-  double z3 = dimensions[2] * sin(dtr(c1));
-  double z4 = Z_OFFSET * cos(dtr(d1));
+  
+  Brain.Screen.printAt(150,20,"ch:%f",ch);
+  Brain.Screen.printAt(150,40,"cd:%f",cd);
+  Brain.Screen.printAt(150,60,"c2:%f",c2);
+  Brain.Screen.printAt(150,80,"tr:%f",tr);
+  Brain.Screen.printAt(150,100,"tz:%f",tz);
+  Brain.Screen.printAt(150,120,"x1:%f",x1);
+  Brain.Screen.printAt(150,140,"x2:%f",x2);
+  Brain.Screen.printAt(150,160,"z1:%f",z1);
+  Brain.Screen.printAt(150,180,"z2:%f",z2);
 
-  double r = (x1+x2);//-(x3+x4)+R_OFFSET;
+  double r = (x1+x2)-tr+R_OFFSET;
   output.x = r*cos(dtr(t));
   output.y = r*sin(dtr(t));
-  output.z = (z1-z2)+(z3-z4);
+  output.z = (z1-z2)-tz;
   output.a = c1;
 }
 
@@ -171,17 +182,26 @@ void RobotArm::inverseKinematicSolve(double x,double y,double z, double a) {
 void RobotArm::inverseKinematicSolve(double x,double y,double z, double a, RobotArmIKinematicOutput &output) {
   double r = sqrt(pow(x,2)+pow(y,2))-R_OFFSET;
 
-  double tnZOF = (dimensions[2]*sin(dtr(a)));
-  double nZOF = Z_OFFSET - tnZOF;
-  double nH = sqrt(pow(dimensions[2],2) + pow(Z_OFFSET,2));
-  double n4 = 90 - (asin((nZOF*sin(dtr(180-(90-a))))/(nH)));
-
-  double tr = nH * sin(dtr(n4));
-  double tz = nH * cos(dtr(n4));
+  double ch = sqrt(pow(dimensions[2],2)+pow(Z_OFFSET,2));
+  double cd = rtd(acos(dtr((pow(ch,2)+pow(dimensions[2],2)+pow(Z_OFFSET,2)))/(2*ch*Z_OFFSET)));
+  double c2 = 180-cd-(90-a);
+  double tr = ch * sin(dtr(c2));
+  double tz = ch * cos(dtr(c2));
 
   double nr = r - tr;
   double nz = z - tz;
   double rot = atan(y/x);
+
+  Brain.Screen.printAt(280,20,"ch:%f",ch);
+  Brain.Screen.printAt(280,40,"cd:%f",cd);
+  Brain.Screen.printAt(280,60,"c2:%f",c2);
+  Brain.Screen.printAt(280,80,"tr:%f",tr);
+  Brain.Screen.printAt(280,100,"tz:%f",tz);
+  Brain.Screen.printAt(280,120,"r:%f",r);
+  Brain.Screen.printAt(280,140,"nr:%f",nr);
+  Brain.Screen.printAt(280,160,"nz:%f",nz);
+  Brain.Screen.printAt(280,180,"rot:%f",rot);
+
 
   output.j4 = a;
   output.j3=acos((pow(nr,2)+pow(nz,2)-pow(dimensions[0],2)-pow(dimensions[1],2))/(2*(dimensions[0])*(dimensions[1])));
