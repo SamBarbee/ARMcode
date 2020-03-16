@@ -61,6 +61,7 @@ int robot_loop();
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  arm.master(1900,2081,2270,353);
 
   // e_stop();
 

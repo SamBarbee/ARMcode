@@ -142,7 +142,7 @@ void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1) 
 void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1, RobotArmFKinematicOutput &output) {
   
   double ch = sqrt(pow(dimensions[2],2)+pow(Z_OFFSET,2));
-  double cd = rtd(acos(dtr((pow(ch,2)+pow(dimensions[2],2)+pow(Z_OFFSET,2)))/(2*ch*Z_OFFSET)));
+  double cd = rtd(acos((pow(ch,2)+pow(dimensions[2],2)-pow(Z_OFFSET,2))/(2*ch*dimensions[2])));
   double c2 = 180-cd-(90-c1);
   double tr = ch * sin(dtr(c2));
   double tz = ch * cos(dtr(c2));
@@ -150,7 +150,7 @@ void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1, 
   double x1 = dimensions[0] * cos(dtr(90-a1));
   double x2 = dimensions[1] * sin(dtr(-b1));
   
-  double z1 = dimensions[0] * sin(dtr(a1));
+  double z1 = dimensions[0] * sin(dtr(90-a1));
   double z2 = dimensions[1] * cos(dtr(b1));
   
   Brain.Screen.printAt(150,20,"ch:%f",ch);
@@ -163,7 +163,7 @@ void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1, 
   Brain.Screen.printAt(150,160,"z1:%f",z1);
   Brain.Screen.printAt(150,180,"z2:%f",z2);
 
-  double r = (x1+x2)-tr+R_OFFSET;
+  double r = x1+x2+tr+R_OFFSET;
   output.x = r*cos(dtr(t));
   output.y = r*sin(dtr(t));
   output.z = (z1-z2)-tz;
@@ -183,13 +183,13 @@ void RobotArm::inverseKinematicSolve(double x,double y,double z, double a, Robot
   double r = sqrt(pow(x,2)+pow(y,2))-R_OFFSET;
 
   double ch = sqrt(pow(dimensions[2],2)+pow(Z_OFFSET,2));
-  double cd = rtd(acos(dtr((pow(ch,2)+pow(dimensions[2],2)+pow(Z_OFFSET,2)))/(2*ch*Z_OFFSET)));
+  double cd = rtd(acos((pow(ch,2)+pow(dimensions[2],2)-pow(Z_OFFSET,2))/(2*ch*dimensions[2])));
   double c2 = 180-cd-(90-a);
   double tr = ch * sin(dtr(c2));
   double tz = ch * cos(dtr(c2));
 
   double nr = r - tr;
-  double nz = z - tz;
+  double nz = z + tz;
   double rot = atan(y/x);
 
   Brain.Screen.printAt(280,20,"ch:%f",ch);
@@ -521,6 +521,13 @@ int RobotArm::mJ1Position(void *arg) {
     arm.mJ1.spin(fwd, -p / 4, volt);
     task::sleep(5);
   }
+}
+
+void RobotArm::master(int _J1,int _J2,int _J3,int _J4) {
+  J1_OFFSET = _J1;
+  J2_OFFSET = _J2;
+  J3_OFFSET = _J3;
+  J4_OFFSET = _J4;
 }
 
 void RobotArm::dataTester() {

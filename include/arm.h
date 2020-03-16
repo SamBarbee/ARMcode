@@ -26,12 +26,12 @@ private:
 
   double dimensions[3] = {7.0,7.0,2.0};
   double R_OFFSET=0.875;
-  double Z_OFFSET=3.5;
+  double Z_OFFSET=3.0;
   
-  double J1_OFFSET=1900;
-  double J2_OFFSET=2081;
-  double J3_OFFSET=2270;
-  double J4_OFFSET=353;
+  double J1_OFFSET;
+  double J2_OFFSET;
+  double J3_OFFSET;
+  double J4_OFFSET;
 
   double pot_res = 4096; //resolution of the pot
   double pot_rot = 333; //pot of measurement
@@ -113,7 +113,9 @@ public:
   /**
    * Zeros and Calibrates Arm (optional posPosition for "potentiometer center" value)
    */
-  void calibrate(int potPosition=0);
+  //void calibrate(int potPosition=0);
+
+  void master(int _J1,int _J2,int _J3,int _J4);
 
   /**
    * Moves the arm to a specific position
