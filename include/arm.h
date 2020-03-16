@@ -24,7 +24,7 @@ private:
 
   int BaseMotor_Pot_Position();
 
-  double dimensions[3] = {7.0,7.0,2.0};
+  double dimensions[3] = {7.0,7.0,2.5};
   double R_OFFSET=0.875;
   double Z_OFFSET=3.0;
   
@@ -48,7 +48,7 @@ private:
   double moveLtarget[4];
   double moveLtargetLength;
 
-  double MP_J1_KP = 0.1;
+  double MP_J1_KP = 0.125;
   double MP_J1_KI = 0.0005;
   double MP_J1_KD = MP_J1_KP*4.0;
   double MP_J1_KV = 0.01;//0.00325;
@@ -56,12 +56,12 @@ private:
   double MP_J1_KF = 0.0;
   bool MP_J1_INVERT_A=false;
 
-  double MP_J2_KP = 0.1;
-  double MP_J2_KI = 0.0005;
+  double MP_J2_KP = 0.5;
+  double MP_J2_KI = 0.000;
   double MP_J2_KD = MP_J2_KP*4;
-  double MP_J2_KV = 0.01;
+  double MP_J2_KV = 0.0125;
   double MP_J2_KA = 0.0;
-  double MP_J2_KF = 0.0;
+  double MP_J2_KF = -3;
   bool MP_J2_INVERT_A=false;
 
   double MP_J3_KP = MP_J2_KP;
@@ -69,7 +69,7 @@ private:
   double MP_J3_KD = MP_J3_KP*4;
   double MP_J3_KV = MP_J2_KV;
   double MP_J3_KA = 0.0;
-  double MP_J3_KF = 0.0;
+  double MP_J3_KF = 1.0;
   bool MP_J3_INVERT_A=false;
 
   double MP_J4_KP = MP_J2_KP;
@@ -115,7 +115,7 @@ public:
    */
   //void calibrate(int potPosition=0);
 
-  void master(int _J1,int _J2,int _J3,int _J4);
+  int master(int _J1,int _J2,int _J3,int _J4);
 
   /**
    * Moves the arm to a specific position

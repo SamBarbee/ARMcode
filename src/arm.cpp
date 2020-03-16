@@ -67,7 +67,7 @@ void RobotArm::moveToPosition(double x, double y, double z) {
 }
 
 void RobotArm::moveToPosition(double x, double y, double z, double a) {
-  moveL(x + xOffset, y + yOffset, z + zOffset, a, 5);
+  moveL(x + xOffset, y + yOffset, z + zOffset, a, 30);
 }
 
 /**
@@ -305,6 +305,17 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
   double changeThreshold = 0;
   double mJ1_voltage = 0, mJ2_voltage = 0, mJ3_voltage = 0, mJ4_voltage = 0;
 
+  x=moveLstart[0];
+  y=moveLstart[1];
+  z=moveLstart[2];
+  a=moveLstart[3];
+  inverseKinematicSolve(x,y,z,a);
+
+  mJ1_error=ioutput[0]-getJ1();
+  mJ2_error=ioutput[1]-getJ2();
+  mJ3_error=ioutput[2]-getJ3();
+  mJ4_error=ioutput[3]-getJ4();
+
   //updateARMController(time, position, velocity, acceleration, itp);
   //pointIndex++;
   while (pointIndex <= numITP) {
@@ -395,6 +406,8 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
     mJ2.spin(fwd,mJ2_voltage,voltageUnits::volt);
     mJ3.spin(fwd,mJ3_voltage,voltageUnits::volt);
     mJ4.spin(fwd,mJ4_voltage,voltageUnits::volt);
+
+    //dataTester();
 
     printf("%f,%f,%f,-10,45\n",mJ2_error+getJ2(),getJ2(),mJ2_voltage);
 
@@ -523,11 +536,33 @@ int RobotArm::mJ1Position(void *arg) {
   }
 }
 
-void RobotArm::master(int _J1,int _J2,int _J3,int _J4) {
-  J1_OFFSET = _J1;
-  J2_OFFSET = _J2;
-  J3_OFFSET = _J3;
-  J4_OFFSET = _J4;
+int RobotArm::master(int _J1,int _J2,int _J3,int _J4) {
+  if(_J1 > 2200 || _J1 < 1800) {
+    Brain.Screen.print("Joint 1 out of range\n");
+    return 1;
+  }
+  else
+    J1_OFFSET = _J1;
+  if(_J2 > 2130 || _J2 < 2020) {
+    Brain.Screen.print("Joint 2 out of range\n");
+    return 2;
+  }
+  else
+    J2_OFFSET = _J2;
+  if(_J3 > 2350 || _J3 < 2200) {
+    Brain.Screen.print("Joint 3 out of range\n");
+    return 3;
+  }
+  else
+    J3_OFFSET = _J3;
+  if(_J4 > 400 || _J4 < 300) {
+    Brain.Screen.print("Joint 4 out of range\n");
+    return 4;
+  }
+  else
+    J4_OFFSET = _J4;
+  
+  return 0;
 }
 
 void RobotArm::dataTester() {

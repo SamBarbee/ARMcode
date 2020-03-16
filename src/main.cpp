@@ -61,7 +61,11 @@ int robot_loop();
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  arm.master(1900,2081,2270,353);
+  if(arm.master(1900,2081,2270,353)!=0) {
+    while(true) {
+      this_thread::sleep_for(500);
+    }
+  }
 
   // e_stop();
 
@@ -82,99 +86,22 @@ int main() {
 
 int robot_loop(){
 
-  //arm.calibrate(-1800);
-  //arm.moveToPosition(.6, -9, 1.5);
-      //Move robot arm to central location
-  vex::task::sleep(50);
+  bool TEACHMODE = false; //puts the robot into coast mode and displays positional data on the screen. use this for finding data.
 
-  
-
-  // sorting_arm.spin(reverse,10,pct);
-  // while(sorting_arm.current(amp) < 0.5){
-  //   vex:task::sleep(20);
-  // }
-  // sorting_arm.resetRotation();
-  // sorting_arm.stop();
-
-
-
-
-  vex::task::sleep(250);
-
-  //arm.eStop();
+  this_thread::sleep_for(500); //robot will try to kill you if this is removed
 
   while(true){
     
-    Brain.Screen.clearScreen();
-    arm.eStop();
-    arm.dataTester();
-    vex::task::sleep(50);
-
-    //arm.moveToPosition(5.63,5.01,0,0);
-
-    // arm.moveToPosition(6,-2,-1.1,0);
-    // arm.moveToPosition(6,2,-1.1,0);
-
-    //arm.moveToPosition(5.63,-5.01,0,0);
-
-
-
-    // arm.moveToPosition(4,7,-1,0);
-    // arm.moveToPosition(4,7,-3,0);
-    // arm.moveToPosition(4,7,-1,0);
-    // arm.moveToPosition(4,-5,-1,0);
-    // arm.moveToPosition(4,-5,-4.0,90);
-    // arm.moveToPosition(7,-8,-4.0,90);
-    // arm.moveToPosition(4,-5,-4.0,90);
-    
-    // arm.moveToPosition(4,-5,-2.5,0);
-
-  //    while(output_track.value(analogUnits::range12bit)< 2800){
-  //   //If the output line tracker sees a puck
-  //     vex::task::sleep(50);
-
-  //     while(output_track.value(analogUnits::range12bit) > 1500) {
-  //       vex::task::sleep(50);
-  //     }
- 
-  //     output_conveyor.stop();
-  //     vex::task::sleep(50);
-       // arm.moveToPosition(6,1,-1);
-  //      arm.moveToPosition(-9,-5.5,.15);
-  //      vexMagnetPickup( PORT3, kMagnetDurationLong );
-  //     arm.moveToPosition(-9,-5.5,.9);
-  //     sorting_arm.spinToPosition(0,degrees,false);
-  //     arm.moveToPosition(8.5,-5.2,.9);
-  //      arm.moveToPosition(8.5,-5.2,0.25);
-  //      vexMagnetDrop( PORT3, kMagnetDurationMedium );
-  //      arm.moveToPosition(8.5,-5.2,.9);
-  //      arm.moveToPosition(-9.0,-5.4,.9);
-
-  // }
-    
-  //    while(input_track.value(analogUnits::range12bit) < 2800){
-  //   // //When the input line tracker sees a puck then
-  //    input_conveyor.setVelocity(85,percent);
-  //   // //Set input belt speed to 100 percent
-  //    input_conveyor.spinFor(forward,1500,degrees);
-  //   // //Rotate input belt 1500 degrees to enter puck onto conveyor belt
-  //    sorting_arm.spinToPosition(90,degrees); 
-  //    output_conveyor.spin(reverse,40,pct);
-  //   // //Rotate sorting arm to 100 degrees for puck output
-  //    input_conveyor.stop();
-     
-  //    }
-  //   // //Stop the input belt
-
-  //    if(sorting_arm.position(deg) > 10){
-  //   //   output_conveyor.spin(reverse);
-  //    //If the sorting arm is at the output location, run the output belt motor
-  //    }
-  //    if(input_track.value(analogUnits::range12bit) > 2800) {
-  //    vex::task::sleep(250);
-  //    main_conveyor.spin(forward,15,pct);
-  //   //If the input line tracker doesn't see a puck, spin the main conveyor at 15 percent
-  //   }
+    if(TEACHMODE) {
+      Brain.Screen.clearScreen();
+      arm.eStop();
+      arm.dataTester();
+      vex::task::sleep(50);
+    }
+    else {
+      arm.moveToPosition(10,5,-5,0);
+      arm.moveToPosition(5,-5,-5,0);
+    }    
 
    }
 
