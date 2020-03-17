@@ -24,9 +24,9 @@ private:
 
   int BaseMotor_Pot_Position();
 
-  double dimensions[3] = {7.0,7.0,2.5};
-  double R_OFFSET=0.875;
-  double Z_OFFSET=3.0;
+  double dimensions[3] = {7.0,7.0,4.0};
+  double R_OFFSET=0.722;
+  double Z_OFFSET=5.0;
   
   double J1_OFFSET;
   double J2_OFFSET;
@@ -56,12 +56,12 @@ private:
   double MP_J1_KF = 0.0;
   bool MP_J1_INVERT_A=false;
 
-  double MP_J2_KP = 0.5;
-  double MP_J2_KI = 0.000;
+  double MP_J2_KP = 0.75;
+  double MP_J2_KI = 0.001;
   double MP_J2_KD = MP_J2_KP*4;
   double MP_J2_KV = 0.0125;
   double MP_J2_KA = 0.0;
-  double MP_J2_KF = -3;
+  double MP_J2_KF = 0;
   bool MP_J2_INVERT_A=false;
 
   double MP_J3_KP = MP_J2_KP;

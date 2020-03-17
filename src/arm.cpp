@@ -67,7 +67,7 @@ void RobotArm::moveToPosition(double x, double y, double z) {
 }
 
 void RobotArm::moveToPosition(double x, double y, double z, double a) {
-  moveL(x + xOffset, y + yOffset, z + zOffset, a, 30);
+  moveL(x + xOffset, y + yOffset, z + zOffset, a, 15);
 }
 
 /**
@@ -245,8 +245,8 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
   float maxVelocity = maxVelocityInput;
 
 // accel duration
-  float t1 = 500;
-  float t2 = 500;
+  float t1 = 800;
+  float t2 = 100;
   float itp = 3;
 
   float t4 = fabs((targetPosition - startPosition)/maxVelocity) * 1000;
