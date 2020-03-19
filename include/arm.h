@@ -24,9 +24,27 @@ private:
 
   int BaseMotor_Pot_Position();
 
-  double dimensions[3] = {7.0,7.0,4.0};
+  double dimensions[3] = {7.0,7.0,2.0};
   double R_OFFSET=0.722;
-  double Z_OFFSET=5.0;
+  double Z_OFFSET=1.0;
+
+  double J1_MAX = 150;
+  double J1_MIN = -150;
+  double J2_MAX = 70;
+  double J2_MIN = -25;
+  double J3_MAX = 45;
+  double J3_MIN = -40;
+  double J4_MAX = 90;
+  double J4_MIN = 0;
+
+  double J1_AMP_LIMIT_CRUISE = 0.35;
+  double J1_AMP_LIMIT_ACCEL = 1.2;
+  double J2_AMP_LIMIT_CRUISE = 2.0;
+  double J2_AMP_LIMIT_ACCEL = 2.0;
+  double J3_AMP_LIMIT_CRUISE = 2.0;
+  double J3_AMP_LIMIT_ACCEL = 2.0;
+  double J4_AMP_LIMIT_CRUISE = 2.0;
+  double J4_AMP_LIMIT_ACCEL = 2.0;
   
   double J1_OFFSET;
   double J2_OFFSET;
@@ -56,10 +74,10 @@ private:
   double MP_J1_KF = 0.0;
   bool MP_J1_INVERT_A=false;
 
-  double MP_J2_KP = 0.75;
-  double MP_J2_KI = 0.001;
+  double MP_J2_KP = 0.1;
+  double MP_J2_KI = 0.0005;
   double MP_J2_KD = MP_J2_KP*4;
-  double MP_J2_KV = 0.0125;
+  double MP_J2_KV = 0.01;
   double MP_J2_KA = 0.0;
   double MP_J2_KF = 0;
   bool MP_J2_INVERT_A=false;
@@ -69,7 +87,7 @@ private:
   double MP_J3_KD = MP_J3_KP*4;
   double MP_J3_KV = MP_J2_KV;
   double MP_J3_KA = 0.0;
-  double MP_J3_KF = 1.0;
+  double MP_J3_KF = 1.5;
   bool MP_J3_INVERT_A=false;
 
   double MP_J4_KP = MP_J2_KP;

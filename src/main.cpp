@@ -99,16 +99,10 @@ int robot_loop(){
       vex::task::sleep(50);
     }
     else {
-      arm.moveToPosition(8,3,-5.25,0);
-      arm.moveToPosition(8,-3,-5.25,0);
+      arm.moveToPosition(8,6,-1,0);
+      arm.moveToPosition(8,-6,-1,0);
     }    
 
    }
-
-
-
-   
-  
-
 
 }

@@ -153,16 +153,6 @@ void RobotArm::forwardKinematicSolve(double t, double a1, double b1, double c1, 
   double z1 = dimensions[0] * sin(dtr(90-a1));
   double z2 = dimensions[1] * cos(dtr(b1));
   
-  Brain.Screen.printAt(150,20,"ch:%f",ch);
-  Brain.Screen.printAt(150,40,"cd:%f",cd);
-  Brain.Screen.printAt(150,60,"c2:%f",c2);
-  Brain.Screen.printAt(150,80,"tr:%f",tr);
-  Brain.Screen.printAt(150,100,"tz:%f",tz);
-  Brain.Screen.printAt(150,120,"x1:%f",x1);
-  Brain.Screen.printAt(150,140,"x2:%f",x2);
-  Brain.Screen.printAt(150,160,"z1:%f",z1);
-  Brain.Screen.printAt(150,180,"z2:%f",z2);
-
   double r = x1+x2+tr+R_OFFSET;
   output.x = r*cos(dtr(t));
   output.y = r*sin(dtr(t));
@@ -191,17 +181,6 @@ void RobotArm::inverseKinematicSolve(double x,double y,double z, double a, Robot
   double nr = r - tr;
   double nz = z + tz;
   double rot = atan(y/x);
-
-  Brain.Screen.printAt(280,20,"ch:%f",ch);
-  Brain.Screen.printAt(280,40,"cd:%f",cd);
-  Brain.Screen.printAt(280,60,"c2:%f",c2);
-  Brain.Screen.printAt(280,80,"tr:%f",tr);
-  Brain.Screen.printAt(280,100,"tz:%f",tz);
-  Brain.Screen.printAt(280,120,"r:%f",r);
-  Brain.Screen.printAt(280,140,"nr:%f",nr);
-  Brain.Screen.printAt(280,160,"nz:%f",nz);
-  Brain.Screen.printAt(280,180,"rot:%f",rot);
-
 
   output.j4 = a;
   output.j3=acos((pow(nr,2)+pow(nz,2)-pow(dimensions[0],2)-pow(dimensions[1],2))/(2*(dimensions[0])*(dimensions[1])));
@@ -246,7 +225,7 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
 
 // accel duration
   float t1 = 800;
-  float t2 = 100;
+  float t2 = 300;
   float itp = 3;
 
   float t4 = fabs((targetPosition - startPosition)/maxVelocity) * 1000;
@@ -315,6 +294,8 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
   mJ2_error=ioutput[1]-getJ2();
   mJ3_error=ioutput[2]-getJ3();
   mJ4_error=ioutput[3]-getJ4();
+
+  Brain.Screen.clearScreen();
 
   //updateARMController(time, position, velocity, acceleration, itp);
   //pointIndex++;
@@ -401,6 +382,35 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
     mJ2_pError=mJ2_error;
     mJ3_pError=mJ3_error;
     mJ4_pError=mJ4_error;
+
+    if(acceleration!=0) {
+      if(mJ1.current()>J1_AMP_LIMIT_ACCEL || mJ2.current()>J2_AMP_LIMIT_ACCEL || mJ3.current()>J3_AMP_LIMIT_ACCEL || mJ4.current()>J4_AMP_LIMIT_ACCEL) {
+        Brain.Screen.printAt(20,20,"Collision");
+        mJ1.setBrake(hold);
+        mJ2.setBrake(hold);
+        mJ3.setBrake(hold);
+        mJ1.spin(fwd,0,velocityUnits::pct);
+        mJ2.spin(fwd,0,velocityUnits::pct);
+        mJ3.spin(fwd,0,velocityUnits::pct);
+        this_thread::sleep_for(1000);
+        pointIndex = numITP;
+      }
+    }
+    else if(acceleration==0 && fabs(velocity) > 1) {
+      Brain.Screen.printAt(20,40,"Cruise");
+      Brain.Screen.printAt(20,60,"Velocity:%f",velocity);
+      if(mJ1.current()>J1_AMP_LIMIT_CRUISE || mJ2.current()>J2_AMP_LIMIT_CRUISE || mJ3.current()>J3_AMP_LIMIT_CRUISE || mJ4.current()>J4_AMP_LIMIT_CRUISE) {
+          Brain.Screen.printAt(20,20,"Collision");
+          mJ1.setBrake(hold);
+          mJ2.setBrake(hold);
+          mJ3.setBrake(hold);
+          mJ1.spin(fwd,0,velocityUnits::pct);
+          mJ2.spin(fwd,0,velocityUnits::pct);
+          mJ3.spin(fwd,0,velocityUnits::pct);
+          this_thread::sleep_for(1000);
+          pointIndex = numITP;
+      }
+    }
 
     mJ1.spin(fwd,mJ1_voltage,voltageUnits::volt);
     mJ2.spin(fwd,mJ2_voltage,voltageUnits::volt);
