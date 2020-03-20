@@ -37,13 +37,13 @@ private:
   double J4_MAX = 90;
   double J4_MIN = 0;
 
-  double J1_AMP_LIMIT_CRUISE = 0.35;
-  double J1_AMP_LIMIT_ACCEL = 1.2;
-  double J2_AMP_LIMIT_CRUISE = 2.0;
-  double J2_AMP_LIMIT_ACCEL = 2.0;
-  double J3_AMP_LIMIT_CRUISE = 2.0;
+  double J1_AMP_LIMIT_CRUISE = 0.4;
+  double J1_AMP_LIMIT_ACCEL = 0.8;
+  double J2_AMP_LIMIT_CRUISE = 1.2;
+  double J2_AMP_LIMIT_ACCEL = 1.5;
+  double J3_AMP_LIMIT_CRUISE = 1.2;
   double J3_AMP_LIMIT_ACCEL = 2.0;
-  double J4_AMP_LIMIT_CRUISE = 2.0;
+  double J4_AMP_LIMIT_CRUISE = 1.2;
   double J4_AMP_LIMIT_ACCEL = 2.0;
   
   double J1_OFFSET;
@@ -74,12 +74,12 @@ private:
   double MP_J1_KF = 0.0;
   bool MP_J1_INVERT_A=false;
 
-  double MP_J2_KP = 0.1;
+  double MP_J2_KP = 0.5;
   double MP_J2_KI = 0.0005;
   double MP_J2_KD = MP_J2_KP*4;
-  double MP_J2_KV = 0.01;
+  double MP_J2_KV = 0.015;
   double MP_J2_KA = 0.0;
-  double MP_J2_KF = 0;
+  double MP_J2_KF = -4;
   bool MP_J2_INVERT_A=false;
 
   double MP_J3_KP = MP_J2_KP;
@@ -87,7 +87,7 @@ private:
   double MP_J3_KD = MP_J3_KP*4;
   double MP_J3_KV = MP_J2_KV;
   double MP_J3_KA = 0.0;
-  double MP_J3_KF = 1.5;
+  double MP_J3_KF = 1.0;
   bool MP_J3_INVERT_A=false;
 
   double MP_J4_KP = MP_J2_KP;

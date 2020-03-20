@@ -389,10 +389,12 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
         mJ1.setBrake(hold);
         mJ2.setBrake(hold);
         mJ3.setBrake(hold);
+        mJ4.setBrake(hold);
         mJ1.spin(fwd,0,velocityUnits::pct);
         mJ2.spin(fwd,0,velocityUnits::pct);
         mJ3.spin(fwd,0,velocityUnits::pct);
-        this_thread::sleep_for(1000);
+        mJ4.spin(fwd,0,velocityUnits::pct);
+        this_thread::sleep_for(5000);
         pointIndex = numITP;
       }
     }
@@ -404,10 +406,12 @@ void RobotArm::calculateMP(float startPositionInput, float targetPositionInput, 
           mJ1.setBrake(hold);
           mJ2.setBrake(hold);
           mJ3.setBrake(hold);
+          mJ4.setBrake(hold);
           mJ1.spin(fwd,0,velocityUnits::pct);
           mJ2.spin(fwd,0,velocityUnits::pct);
           mJ3.spin(fwd,0,velocityUnits::pct);
-          this_thread::sleep_for(1000);
+          mJ4.spin(fwd,0,velocityUnits::pct);
+          this_thread::sleep_for(5000);
           pointIndex = numITP;
       }
     }

@@ -88,7 +88,7 @@ int robot_loop(){
 
   bool TEACHMODE = false; //puts the robot into coast mode and displays positional data on the screen. use this for finding data.
 
-  this_thread::sleep_for(500); //robot will try to kill you if this is removed
+  this_thread::sleep_for(500); //robot will try to kill you if this is removed, and it might succeed. Robot 1 - Sam 0
 
   while(true){
     
@@ -99,8 +99,8 @@ int robot_loop(){
       vex::task::sleep(50);
     }
     else {
-      arm.moveToPosition(8,6,-1,0);
-      arm.moveToPosition(8,-6,-1,0);
+      arm.moveToPosition(8,8,-2.5,0);
+      arm.moveToPosition(8,-8,-1,90);
     }    
 
    }
